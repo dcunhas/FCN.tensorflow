@@ -47,17 +47,17 @@ def read_dataset(data_dir):
     return training_records, validation_records
 
 def read_testing_set(data_dir):
-    pickle_test_filename = "dataset.pickle"
-    pickle_test_filepath = os.path.join(data_dir, pickle_test_filename)
-    if not os.path.exists(pickle_test_filepath):
+    pickle_filename = "testing_dataset.pickle"
+    pickle_filepath = os.path.join(data_dir, pickle_filename)
+    if not os.path.exists(pickle_filepath):
         result = create_image_lists(data_dir, ['testing'])
         print ("Pickling ...")
-        with open(pickle_test_filepath, 'wb') as f:
+        with open(pickle_filepath, 'wb') as f:
             pickle.dump(result, f, pickle.HIGHEST_PROTOCOL)
     else:
         print ("Found pickle file!")
 
-    with open(pickle_test_filepath, 'rb') as f:
+    with open(pickle_filepath, 'rb') as f:
         result = pickle.load(f)
         testing_records = result['testing']
         del result

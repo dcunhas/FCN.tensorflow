@@ -247,15 +247,17 @@ def main(argv=None):
                              name="predict_" + test_dataset_reader.files[i]['filename'])
 
     elif FLAGS.mode == "test":
-    	predict_records = scene_parsing.read_prediction_set(FLAGS.data_dir)
+    	predict_records = scene_parsing.read_testing_set(FLAGS.data_dir)
         no_predict_images = len(predict_records)
         print ("No. of predict records {}".format(no_predict_images))
-        predict_image_options = {'resize': True, 'resize_size': IMAGE_SIZE, 'predict_dataset': True}
+        predict_image_options = {'resize': True, 'resize_size': IMAGE_SIZE}
         test_dataset_reader = dataset.BatchDatset(predict_records, predict_image_options)
         print("Predicting {} images".format(no_predict_images))
 
         if not os.path.exists(os.path.join(FLAGS.logs_dir, "predictions")):
             os.makedirs(os.path.join(FLAGS.logs_dir, "predictions"))
+
+        iou_array = []
         for i in range(no_predict_images):
             if (i % 10 == 0):
                 print("Predicted {}/{} images".format(i, no_predict_images))
@@ -265,10 +267,12 @@ def main(argv=None):
             pred = np.squeeze(pred, axis=3)
 
             iou, update_op = tf.metrics.mean_iou(true_label, pred, NUM_OF_CLASSES)
-            print (iou)
+            iou_array.append(iou)
 
-            utils.save_image(pred[0].astype(np.uint8), os.path.join(FLAGS.logs_dir, "predictions"),
-                             name="predict_" + test_dataset_reader.files[i]['filename'])
+        print (iou_array)
+        print ("Mean IOU ", sum(iou_array)/len(iou_array))
+
+      
 
         
         

@@ -246,6 +246,33 @@ def main(argv=None):
             utils.save_image(pred[0].astype(np.uint8), os.path.join(FLAGS.logs_dir, "predictions"),
                              name="predict_" + test_dataset_reader.files[i]['filename'])
 
+    elif FLAGS.mode == "test":
+    	predict_records = scene_parsing.read_prediction_set(FLAGS.data_dir)
+        no_predict_images = len(predict_records)
+        print ("No. of predict records {}".format(no_predict_images))
+        predict_image_options = {'resize': True, 'resize_size': IMAGE_SIZE, 'predict_dataset': True}
+        test_dataset_reader = dataset.BatchDatset(predict_records, predict_image_options)
+        print("Predicting {} images".format(no_predict_images))
+
+        if not os.path.exists(os.path.join(FLAGS.logs_dir, "predictions")):
+            os.makedirs(os.path.join(FLAGS.logs_dir, "predictions"))
+        for i in range(no_predict_images):
+            if (i % 10 == 0):
+                print("Predicted {}/{} images".format(i, no_predict_images))
+            predict_images, true_label = test_dataset_reader.next_batch(1)
+            pred = sess.run(pred_annotation, feed_dict={image: predict_images,
+                                                        keep_probability: 1.0})
+            pred = np.squeeze(pred, axis=3)
+
+            iou, update_op = tf.metrics.mean_iou(true_label, pred, NUM_OF_CLASSES)
+            print (iou)
+
+            utils.save_image(pred[0].astype(np.uint8), os.path.join(FLAGS.logs_dir, "predictions"),
+                             name="predict_" + test_dataset_reader.files[i]['filename'])
+
+        
+        
+
 
 if __name__ == "__main__":
     tf.app.run()

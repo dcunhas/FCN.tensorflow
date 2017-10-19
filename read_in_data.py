@@ -9,7 +9,7 @@ import glob
 import TensorflowUtils as utils
 
 # DATA_URL = 'http://sceneparsing.csail.mit.edu/data/ADEChallengeData2016.zip'
-#DATA_URL = 'http://data.csail.mit.edu/places/ADEchallenge/ADEChallengeData2016.zip'
+# DATA_URL = 'http://data.csail.mit.edu/places/ADEchallenge/ADEChallengeData2016.zip'
 
 def read_prediction_set(data_dir):
     if not gfile.Exists(data_dir):
@@ -46,12 +46,29 @@ def read_dataset(data_dir):
 
     return training_records, validation_records
 
+def read_testing_set(data_dir):
+    pickle_test_filename = "dataset.pickle"
+    pickle_test_filepath = os.path.join(data_dir, pickle_test_filename)
+    if not os.path.exists(pickle_test_filepath):
+        result = create_image_lists(data_dir, ['testing'])
+        print ("Pickling ...")
+        with open(pickle_test_filepath, 'wb') as f:
+            pickle.dump(result, f, pickle.HIGHEST_PROTOCOL)
+    else:
+        print ("Found pickle file!")
 
-def create_image_lists(image_dir):
+    with open(pickle_test_filepath, 'rb') as f:
+        result = pickle.load(f)
+        testing_records = result['testing']
+        del result
+
+    return testing_records
+
+
+def create_image_lists(image_dir, directories = ['training', 'validation']):
     if not gfile.Exists(image_dir):
         print("Image directory '" + image_dir + "' not found.")
         return None
-    directories = ['training', 'validation']
     image_list = {}
 
     for directory in directories:

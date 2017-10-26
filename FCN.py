@@ -270,13 +270,14 @@ def main(argv=None):
             label_tensor = tf.convert_to_tensor(true_label)
 
             iou, update_op = tf.metrics.mean_iou(label_tensor, prediction_tensor, NUM_OF_CLASSESS)
-            iou_array.append(iou)
+            #iou_array.append(iou)
 
         #print (iou_array)
         #tf.print(iou)
+        print ("Mean IOU ", tf.reduce_sum(iou)/tf.size(iou))
         iou = tf.Print(iou, [iou])  # Here we are using the value returned by tf.Print
         printing_variable = iou + 1  #In evaluating printing_var, it will print out iou
-        print ("Mean IOU ", tf.reduce_sum(iou_array)/tf.size(iou_array))
+        
 
       
 

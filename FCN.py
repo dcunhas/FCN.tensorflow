@@ -273,7 +273,8 @@ def main(argv=None):
             iou_array.append(iou)
 
         print (iou_array)
-        print ("Mean IOU ", sum(iou_array)/len(iou_array))
+        tf.print(iou)
+        print ("Mean IOU ", tf.reduce_sum(iou_array)/tf.size(iou_array))
 
       
 

@@ -257,7 +257,7 @@ def main(argv=None):
         if not os.path.exists(os.path.join(FLAGS.logs_dir, "predictions")):
             os.makedirs(os.path.join(FLAGS.logs_dir, "predictions"))
         iou_array = []
-        for i in range(no_predict_images):
+        for i in range(no_predict_images-2700):
             if (i % 10 == 0):
                 print("Predicted {}/{} images".format(i, no_predict_images))
             predict_images, true_label = test_dataset_reader.next_batch(1)

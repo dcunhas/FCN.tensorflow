@@ -265,9 +265,10 @@ def main(argv=None):
                                                         keep_probability: 1.0})
             pred = np.squeeze(pred, axis=3)
 
-            prediction_tensor = tf.stack(pred)
+            prediction_tensor = tf.convert_to_tensor(pred)
+            label_tensor = tf.convert_to_tensor(true_label)
 
-            iou, update_op = tf.metrics.mean_iou(true_label, prediction_tensor, NUM_OF_CLASSESS)
+            iou, update_op = tf.metrics.mean_iou(label_tensor, prediction_tensor, NUM_OF_CLASSESS)
             iou_array.append(iou)
 
         print (iou_array)

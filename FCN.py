@@ -266,6 +266,7 @@ def main(argv=None):
             pred = np.squeeze(pred, axis=3)
 
             prediction_tensor = tf.convert_to_tensor(pred)
+            true_label = np.squeeze(true_label, axis=3)
             label_tensor = tf.convert_to_tensor(true_label)
 
             iou, update_op = tf.metrics.mean_iou(label_tensor, prediction_tensor, NUM_OF_CLASSESS)

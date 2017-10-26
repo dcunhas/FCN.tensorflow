@@ -257,7 +257,7 @@ def main(argv=None):
         if not os.path.exists(os.path.join(FLAGS.logs_dir, "predictions")):
             os.makedirs(os.path.join(FLAGS.logs_dir, "predictions"))
         #iou_array = []
-        for i in range(no_predict_images-2700):
+        for i in range(no_predict_images-2800):
             if (i % 10 == 0):
                 print("Predicted {}/{} images".format(i, no_predict_images))
             predict_images, true_label = test_dataset_reader.next_batch(1)
@@ -274,7 +274,9 @@ def main(argv=None):
 
         #print (iou_array)
         #tf.print(iou)
-        print ("Mean IOU ", tf.reduce_sum(iou)/tf.size(iou))
+        tensor_sum = tf.reduce_sum(iou)
+        tensor_length = tf.size(iou)
+        print ("Mean IOU ", tensor_sum/tensor_length)
         iou = tf.Print(iou, [iou])  # Here we are using the value returned by tf.Print
         printing_variable = iou + 1  #In evaluating printing_var, it will print out iou
         

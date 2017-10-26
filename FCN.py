@@ -256,7 +256,7 @@ def main(argv=None):
 
         if not os.path.exists(os.path.join(FLAGS.logs_dir, "predictions")):
             os.makedirs(os.path.join(FLAGS.logs_dir, "predictions"))
-        #iou_array = []
+        iou_array = []
         for i in range(no_predict_images-2800):
             if (i % 10 == 0):
                 print("Predicted {}/{} images".format(i, no_predict_images))
@@ -270,16 +270,15 @@ def main(argv=None):
             label_tensor = tf.convert_to_tensor(true_label)
 
             iou, update_op = tf.metrics.mean_iou(label_tensor, prediction_tensor, NUM_OF_CLASSESS)
-            #iou_array.append(iou)
+            iou = sess.run(iou)
+            iou_array.append(iou)
 
-        #print (iou_array)
+        print (iou_array)
         #tf.print(iou)
         tensor_sum = tf.reduce_sum(iou)
         tensor_length = tf.size(iou)
         print ("Mean IOU ", tensor_sum)
         print ("Mean IOU ", tensor_length)
-        iou = tf.Print(iou, [iou])  # Here we are using the value returned by tf.Print
-        printing_variable = iou + 1  #In evaluating printing_var, it will print out iou
         
 
       

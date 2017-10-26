@@ -254,6 +254,9 @@ def main(argv=None):
         test_dataset_reader = dataset.BatchDatset(predict_records, predict_image_options)
         print("Predicting {} images".format(no_predict_images))
 
+        sess.run(tf.global_variables_initializer())
+   		sess.run(tf.local_variables_initializer())
+
         if not os.path.exists(os.path.join(FLAGS.logs_dir, "predictions")):
             os.makedirs(os.path.join(FLAGS.logs_dir, "predictions"))
         iou_array = []
@@ -274,11 +277,7 @@ def main(argv=None):
             iou_array.append(iou)
 
         print (iou_array)
-        #tf.print(iou)
-        tensor_sum = tf.reduce_sum(iou)
-        tensor_length = tf.size(iou)
-        print ("Mean IOU ", tensor_sum)
-        print ("Mean IOU ", tensor_length)
+        print ("Mean IOU ", sum(iou_array)/len(iou_array))
         
 
       

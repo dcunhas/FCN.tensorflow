@@ -255,7 +255,7 @@ def main(argv=None):
         print("Predicting {} images".format(no_predict_images))
 
         sess.run(tf.global_variables_initializer())
-   		sess.run(tf.local_variables_initializer())
+        sess.run(tf.local_variables_initializer())
 
         if not os.path.exists(os.path.join(FLAGS.logs_dir, "predictions")):
             os.makedirs(os.path.join(FLAGS.logs_dir, "predictions"))

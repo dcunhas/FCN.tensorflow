@@ -260,7 +260,7 @@ def main(argv=None):
         if not os.path.exists(os.path.join(FLAGS.logs_dir, "predictions")):
             os.makedirs(os.path.join(FLAGS.logs_dir, "predictions"))
         iou_array = []
-        for i in range(no_predict_images-2800):
+        for i in range(no_predict_images-2850):
             if (i % 10 == 0):
                 print("Predicted {}/{} images".format(i, no_predict_images))
             predict_images, true_label = test_dataset_reader.next_batch(1)
@@ -273,6 +273,8 @@ def main(argv=None):
             label_tensor = tf.convert_to_tensor(true_label)
 
             iou, update_op = tf.metrics.mean_iou(label_tensor, prediction_tensor, NUM_OF_CLASSESS)
+            tf.global_variables_initializer().run()
+            tf.local_variables_initializer().run()
             print (iou)
             #iou = sess.run(iou)
             iou_array.append(iou)

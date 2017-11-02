@@ -271,7 +271,10 @@ def main(argv=None):
             prediction_tensor = tf.convert_to_tensor(pred)
 
             true_label = np.squeeze(true_label, axis=3)
+
             label_tensor = tf.convert_to_tensor(true_label)
+
+            print ("Sess run of labels ", sess.run([label_tensor]))
 
             #print ("Pred not equal to true label", pred != true_label)
             print ( np.count_nonzero(pred != true_label) )

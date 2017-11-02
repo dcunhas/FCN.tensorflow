@@ -276,12 +276,14 @@ def main(argv=None):
             print ("prediction_tensor ", prediction_tensor)
             print ("NUM_OF_CLASSESS ", NUM_OF_CLASSESS)
 
-            sess.run(tf.global_variables_initializer())
-            sess.run(tf.local_variables_initializer())
+            
             #tf.global_variables_initializer().run()
             #tf.local_variables_initializer().run()
 
             iou, update_op = tf.metrics.mean_iou(label_tensor, prediction_tensor, NUM_OF_CLASSESS)
+
+            sess.run(tf.global_variables_initializer())
+            sess.run(tf.local_variables_initializer())
             
             iou_val = sess.run([iou])
 

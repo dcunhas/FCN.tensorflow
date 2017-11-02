@@ -269,12 +269,16 @@ def main(argv=None):
             pred = np.squeeze(pred, axis=3)
 
             prediction_tensor = tf.convert_to_tensor(pred)
+
             true_label = np.squeeze(true_label, axis=3)
             label_tensor = tf.convert_to_tensor(true_label)
 
-            print ("label_tensor ", label_tensor)
-            print ("prediction_tensor ", prediction_tensor)
-            print ("NUM_OF_CLASSESS ", NUM_OF_CLASSESS)
+            print ("Pred not equal to true label", pred != true_label)
+            print ( np.count_nonzero(pred != true_label) )
+
+            #print ("label_tensor ", label_tensor)
+            #print ("prediction_tensor ", prediction_tensor)
+            #print ("NUM_OF_CLASSESS ", NUM_OF_CLASSESS)
 
             
             #tf.global_variables_initializer().run()
@@ -291,8 +295,8 @@ def main(argv=None):
             #iou = sess.run(iou)
             iou_array.append(iou_val)
 
-        #print (iou_array)
-        #print ("Mean IOU ", sum(iou_array)/len(iou_array))
+        print ("IOU Array", iou_array)
+        print ("Mean IOU ", sum(iou_array)/len(iou_array))
         
 
       

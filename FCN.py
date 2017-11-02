@@ -295,11 +295,13 @@ def main(argv=None):
             #sess.run(tf.global_variables_initializer())
             sess.run(tf.local_variables_initializer())
             
-            sess.run(update_op)
+            
             iou_val = sess.run([iou])
 
+            sess.run(update_op)
+
             print (iou_val)
-            #iou = sess.run(iou)
+
             iou_array.append(iou_val)
 
         print ("IOU Array ", iou_array)

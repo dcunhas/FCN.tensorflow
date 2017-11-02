@@ -292,9 +292,10 @@ def main(argv=None):
 
             iou, update_op = tf.metrics.mean_iou(label_tensor, prediction_tensor, NUM_OF_CLASSESS)
 
-            sess.run(tf.global_variables_initializer())
+            #sess.run(tf.global_variables_initializer())
             sess.run(tf.local_variables_initializer())
             
+            sess.run(update_op)
             iou_val = sess.run([iou])
 
             print (iou_val)

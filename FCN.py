@@ -260,7 +260,7 @@ def main(argv=None):
             os.makedirs(os.path.join(FLAGS.logs_dir, "predictions"))
         iou_array = []
 
-        for i in range(no_predict_images-2908):
+        for i in range(no_predict_images-2800):
             if (i % 10 == 0):
                 print("Predicted {}/{} images".format(i, no_predict_images))
             predict_images, true_label = test_dataset_reader.next_batch(1)
@@ -299,12 +299,12 @@ def main(argv=None):
             iou_val = sess.run([iou])
 
 
-            print (iou_val)
+            #print (iou_val)
 
             iou_array.append(iou_val)
 
         print ("IOU Array ", iou_array)
-        #print ("Mean IOU ", sum(iou_array)/len(iou_array))
+        print ("Mean IOU ", np.mean(iou_array))
         
 
       

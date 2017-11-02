@@ -254,41 +254,22 @@ def main(argv=None):
         test_dataset_reader = dataset.BatchDatset(predict_records, predict_image_options)
         print("Predicting {} images".format(no_predict_images))
 
-        
-
         if not os.path.exists(os.path.join(FLAGS.logs_dir, "predictions")):
             os.makedirs(os.path.join(FLAGS.logs_dir, "predictions"))
+        
         iou_array = []
 
-        for i in range(no_predict_images-2800):
+        for i in range(no_predict_images):
             if (i % 10 == 0):
                 print("Predicted {}/{} images".format(i, no_predict_images))
             predict_images, true_label = test_dataset_reader.next_batch(1)
             pred = sess.run(pred_annotation, feed_dict={image: predict_images,
                                                         keep_probability: 1.0})
             pred = np.squeeze(pred, axis=3)
-
             prediction_tensor = tf.convert_to_tensor(pred)
 
             true_label = np.squeeze(true_label, axis=3)
-
             label_tensor = tf.convert_to_tensor(true_label)
-
-            #print ("Sess run of labels ", sess.run([label_tensor]))
-
-            #print ("Pred not equal to true label", pred != true_label)
-            #print ( np.count_nonzero(pred != true_label) )
-
-            #print("Pred values ", np.unique(pred))
-            #print("True label values ", np.unique(true_label))
-
-            #print ("label_tensor ", label_tensor)
-            #print ("prediction_tensor ", prediction_tensor)
-            #print ("NUM_OF_CLASSESS ", NUM_OF_CLASSESS)
-
-            
-            #tf.global_variables_initializer().run()
-            #tf.local_variables_initializer().run()
 
             iou, update_op = tf.metrics.mean_iou(label_tensor, prediction_tensor, NUM_OF_CLASSESS)
 
@@ -297,9 +278,6 @@ def main(argv=None):
             
             sess.run(update_op)
             iou_val = sess.run([iou])
-
-
-            #print (iou_val)
 
             iou_array.append(iou_val)
 

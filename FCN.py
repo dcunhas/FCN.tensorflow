@@ -273,11 +273,12 @@ def main(argv=None):
             label_tensor = tf.convert_to_tensor(true_label)
 
             iou, update_op = tf.metrics.mean_iou(label_tensor, prediction_tensor, NUM_OF_CLASSESS)
+            print iou
             #iou = sess.run(iou)
             iou_array.append(iou)
 
-        print (iou_array)
-        print ("Mean IOU ", sum(iou_array)/len(iou_array))
+        #print (iou_array)
+        #print ("Mean IOU ", sum(iou_array)/len(iou_array))
         
 
       

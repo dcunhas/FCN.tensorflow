@@ -254,8 +254,7 @@ def main(argv=None):
         test_dataset_reader = dataset.BatchDatset(predict_records, predict_image_options)
         print("Predicting {} images".format(no_predict_images))
 
-        #sess.run(tf.global_variables_initializer())
-        #sess.run(tf.local_variables_initializer())
+        
 
         if not os.path.exists(os.path.join(FLAGS.logs_dir, "predictions")):
             os.makedirs(os.path.join(FLAGS.logs_dir, "predictions"))
@@ -273,8 +272,8 @@ def main(argv=None):
             label_tensor = tf.convert_to_tensor(true_label)
 
             iou, update_op = tf.metrics.mean_iou(label_tensor, prediction_tensor, NUM_OF_CLASSESS)
-            tf.global_variables_initializer().run()
-            tf.local_variables_initializer().run()
+            sess.run(tf.global_variables_initializer())
+        	sess.run(tf.local_variables_initializer())
             print (iou)
             #iou = sess.run(iou)
             iou_array.append(iou)

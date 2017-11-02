@@ -274,13 +274,13 @@ def main(argv=None):
 
             label_tensor = tf.convert_to_tensor(true_label)
 
-            print ("Sess run of labels ", sess.run([label_tensor]))
+            #print ("Sess run of labels ", sess.run([label_tensor]))
 
             #print ("Pred not equal to true label", pred != true_label)
-            print ( np.count_nonzero(pred != true_label) )
+            #print ( np.count_nonzero(pred != true_label) )
 
-            print("Pred values ", np.unique(pred))
-            print("True label values ", np.unique(true_label))
+            #print("Pred values ", np.unique(pred))
+            #print("True label values ", np.unique(true_label))
 
             #print ("label_tensor ", label_tensor)
             #print ("prediction_tensor ", prediction_tensor)
@@ -295,10 +295,9 @@ def main(argv=None):
             #sess.run(tf.global_variables_initializer())
             sess.run(tf.local_variables_initializer())
             
-            
+            sess.run(update_op)
             iou_val = sess.run([iou])
 
-            sess.run(update_op)
 
             print (iou_val)
 

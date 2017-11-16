@@ -161,6 +161,7 @@ def main(argv=None):
 
     iou_summary = tf.summary.scalar("IOU", iou)
 
+    sess.run(tf.local_variables_initializer())
 
     trainable_var = tf.trainable_variables()
     if FLAGS.debug:

@@ -146,6 +146,8 @@ def main(argv=None):
     image = tf.placeholder(tf.float32, shape=[None, IMAGE_SIZE, IMAGE_SIZE, 3], name="input_image")
     annotation = tf.placeholder(tf.int32, shape=[None, IMAGE_SIZE, IMAGE_SIZE, 1], name="annotation")
 
+    pred_images = tf.placeholder(tf.int32, shape=[None, IMAGE_SIZE, IMAGE_SIZE, 1], name="pred_images")
+
     pred_annotation, logits = inference(image, keep_probability)
     tf.summary.image("input_image", image, max_outputs=2)
     tf.summary.image("ground_truth", tf.cast(annotation, tf.uint8), max_outputs=2)
@@ -154,6 +156,11 @@ def main(argv=None):
                                                                           labels=tf.squeeze(annotation, squeeze_dims=[3]),
                                                                           name="entropy")))
     loss_summary = tf.summary.scalar("entropy", loss)
+
+    iou, iou_update_op = tf.metrics.mean_iou(tf.squeeze(annotation, squeeze_dims=[3]), tf.squeeze(pred_annotation, squeeze_dims=[3]), NUM_OF_CLASSESS)
+
+    iou_summary = tf.summary.scalar("IOU", iou)
+
 
     trainable_var = tf.trainable_variables()
     if FLAGS.debug:
@@ -198,19 +205,24 @@ def main(argv=None):
 
             sess.run(train_op, feed_dict=feed_dict)
 
+
+
             if itr % 10 == 0:
-                train_loss, summary_str = sess.run([loss, loss_summary], feed_dict=feed_dict)
+                train_loss, loss_summary_str, _, iou_value, iou_summary_str = sess.run([loss, loss_summary, iou_update_op, iou, iou_summary], feed_dict=feed_dict)
                 print("Step: %d, Train_loss:%g" % (itr, train_loss))
-                train_writer.add_summary(summary_str, itr)
+                train_writer.add_summary(loss_summary_str, itr)
+                train_writer.add_summary(iou_summary_str, itr)
 
             if itr % 500 == 0:
                 valid_images, valid_annotations = validation_dataset_reader.next_batch(FLAGS.batch_size)
-                valid_loss, summary_sva = sess.run([loss, loss_summary], feed_dict={image: valid_images, annotation: valid_annotations,
+                valid_loss, loss_summary_str, _, iou_value, iou_summary_str = sess.run([loss, loss_summary, iou_update_op, iou, iou_summary], feed_dict={image: valid_images, annotation: valid_annotations,
                                                        keep_probability: 1.0})
                 print("%s ---> Validation_loss: %g" % (datetime.datetime.now(), valid_loss))
 
+
                 # add validation loss to TensorBoard
-                validation_writer.add_summary(summary_sva, itr)
+                validation_writer.add_summary(loss_summary_str, itr)
+                validation_writer.add_summary(iou_summary_str, itr)
                 saver.save(sess, FLAGS.logs_dir + "model.ckpt", itr)
 
     elif FLAGS.mode == "visualize":

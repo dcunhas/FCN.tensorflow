@@ -58,7 +58,7 @@ class DatasetReader:
         elif annotation_filename is None:
             return image, name
         else:
-            return image, annotation
+            return image, annotation, name
 
     def _augment_image(self, image, annotation_file=None):
         if annotation_file is not None:
